@@ -130,6 +130,12 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Data
 
 ![](images/authentication.png) 
 
+<pre><code>--Create a SQL user for the workspace MSI in database
+CREATE USER [synapsecontrol] FROM EXTERNAL PROVIDER;
+
+--Granting permission to the identity
+GRANT CONTROL ON DATABASE::sqlpool1 TO synapsecontrol;</code></pre>
+
 Further details on Managed Identity for Data Factory, and how the Data Factoryâ€™s Managed Identity is added to your SQL Server can be found here:
 
 https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identity
