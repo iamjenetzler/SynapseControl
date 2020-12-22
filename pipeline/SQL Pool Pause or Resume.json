@@ -1,0 +1,214 @@
+{
+	"name": "SQL Pool Pause or Resume",
+	"properties": {
+		"description": "Identify the list of databases (SQL pools) in your SQL server instance\nRemove any irrelevant databases from this list (e.g. master)\nLoop over each database and:\ni. Check the state of the database\nii.  Depending upon its status, Initiate the Pause or Restart",
+		"activities": [
+			{
+				"name": "GET List Databases",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools?api-version=2019-06-01-preview')",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
+			},
+			{
+				"name": "Exclude Master",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "GET List Databases",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GET List Databases').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(startswith(item().name,'master'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "For Each Database",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Exclude Master",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Exclude Master').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Check State",
+							"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')",
+									"type": "Expression"
+								},
+								"connectVia": {
+									"referenceName": "AutoResolveIntegrationRuntime",
+									"type": "IntegrationRuntimeReference"
+								},
+								"method": "GET",
+								"authentication": {
+									"type": "MSI",
+									"resource": "https://management.azure.com"
+								}
+							}
+						},
+						{
+							"name": "If Condition1",
+							"description": "evaluate the status from the previous step",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Check State",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@startswith(activity('Check State').output.properties.status,'Paused') ",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "SQLPool_Pause",
+										"description": "pause SQL pool, invoking a POST request",
+										"type": "WebActivity",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"url": {
+												"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',activity('Check State').output.name,'/pause?api-version=2019-06-01-preview')",
+												"type": "Expression"
+											},
+											"connectVia": {
+												"referenceName": "AutoResolveIntegrationRuntime",
+												"type": "IntegrationRuntimeReference"
+											},
+											"method": "POST",
+											"body": " ",
+											"authentication": {
+												"type": "MSI",
+												"resource": "https://management.azure.com"
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "SQLPool_Resume",
+										"description": "resume SQL pool, invoking a POST request",
+										"type": "WebActivity",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"url": {
+												"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',activity('Check State').output.name,'/resume?api-version=2019-06-01-preview')",
+												"type": "Expression"
+											},
+											"connectVia": {
+												"referenceName": "AutoResolveIntegrationRuntime",
+												"type": "IntegrationRuntimeReference"
+											},
+											"method": "POST",
+											"body": " ",
+											"authentication": {
+												"type": "MSI",
+												"resource": "https://management.azure.com"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ResourceGroup": {
+				"type": "string",
+				"defaultValue": "Synapse580"
+			},
+			"Subscription": {
+				"type": "string",
+				"defaultValue": "b9913441-8a8e-4fb1-812a-9fcbe1dd9aba"
+			},
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "synapse580"
+			},
+			"DatabaseName": {
+				"type": "string",
+				"defaultValue": "sqlpool1"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-12-22T18:14:51Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
