@@ -1,20 +1,20 @@
 
 ## Introduction
 
-The process below describes one way to automate the pausing and restarting of Synapse SQL pools (previously known as SQL DW instances), using Azure Data Factory. While there are many ways of doing this, most examples seem to be overly complicated for what should be a simple process. Also, it makes sense to include this as part of any existing data orchestration process, which typically means it need to be implemented in Data Factory. Thus, this example will show how easy it is to implement this in Data Factory and take you through the steps required.
+The process below describes one way to automate the pausing and restarting of Synapse SQL pools (previously known as SQL DW instances), using a Synapse pipeline. While there are many ways of doing this, most examples seem to be overly complicated for what should be a simple process. Also, it makes sense to include this as part of any existing data orchestration process, which typically means it need to be implemented in Data Factory. Thus, this example will show how easy it is to implement this in Data Factory and take you through the steps required.
 
 The process I will describe below goes through a set of steps:
 <ol start="1">
-<li>Identify the list of databases (SQL pools) in your SQL server instance</li>
+<li>Identify the list of databases (SQL pools) in your Synapse workspace</li>
 <li>Remove any irrelevant databases from this list (e.g. master)</li>
-<li>Loop over each database and:
-<pre><code>i. Check the state of the database
+<li>Loop over each sql pool and:
+<pre><code>i. Check the state of the sql pool
 ii.  Depending upon its status, Initiate the Pause or Restart
 </code></pre>
 </li>
 </ol>
 
-This requires a simple pipeline in Data Factory:
+This requires a simple pipeline in Synapse:
 ![](images/simple-pipeline1.png)
 
 Depending upon the nature of your environment, the whole process described here may not apply and you may just want to pick and choose the appropriate step. Typically the process described here would be used to Pause or Restart all instances in a Development, Test or PoC environment â€“ where the number of instances could vary over time â€“ whereas for a live environment you are more likely to schedule Pause/Restart on a instance by instance basis so will only need step 3.
