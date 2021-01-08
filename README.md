@@ -9,11 +9,10 @@ The process I will describe below goes through a set of steps:
 <li>Remove any irrelevant databases from this list (e.g. master)</li>
 <li>Loop over each sql pool and:
 <ul class="square">
- <ol start="1">
+ <li></li>
  <li>Check the state of the sql pool</li>
  <li>Depending upon its status, Initiate the Pause or Restart</li>
- </ol>
- </ul>
+</ul>
 </li>
 </ol>
  
