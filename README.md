@@ -1,4 +1,4 @@
-
+# Pause and Resume Synapse SQL pools using Synapse Pipelines
 ## Introduction
 
 The process below describes one way to automate the pausing and restarting of Synapse SQL pools (previously known as SQL DW instances), using a Synapse pipeline. While there are many ways of doing this, most examples seem to be overly complicated for what should be a simple process. Also, it makes sense to include this as part of any existing data orchestration process, which typically means it need to be implemented in Synapse Pipelines. Thus, this example will show how easy it is to implement this in Synapse Pipelines and take you through the steps required.
@@ -146,3 +146,5 @@ https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identit
 https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
 
 https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+
+#Synapse
