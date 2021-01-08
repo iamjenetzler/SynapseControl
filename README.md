@@ -8,8 +8,8 @@ The process I will describe below goes through a set of steps:
 <li>Identify the list of databases (SQL pools) in your Synapse workspace</li>
 <li>Remove any irrelevant databases from this list (e.g. master)</li>
 <li>Loop over each sql pool and:
-<pre>i. Check the state of the sql pool
-ii. Depending upon its status, Initiate the Pause or Restart
+<pre>i.  Check the state of the sql pool
+ii.  Depending upon its status, Initiate the Pause or Restart
 </pre>
 </li>
 </ol>
