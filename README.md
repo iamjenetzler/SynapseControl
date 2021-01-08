@@ -131,22 +131,11 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Syna
   https://docs.microsoft.com/en-us/azure/data-factory/control-flow-web-activity#managed-identity
 
 ![](images/Authentication.jpg) 
-<pre><code>
---Create a SQL user for the workspace MSI in database
-CREATE USER [synapsecontrol] FROM EXTERNAL PROVIDER;
-
---Granting permission to the identity
-GRANT CONTROL ON DATABASE::sqlpool1 TO synapsecontrol;
-</code></pre>
 
 Further details on Managed Identity for Synapse, and how Synapse's Managed Identity is added to your SQL Server can be found here:
-
-Grant permissions to workspace managed identity
 
 <a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-identity">Azure Synapse workspace managed identity</a>
 
 <a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/how-to-grant-workspace-managed-identity-permissions">Grant permissions to workspace managed identity</a>
 
-https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
-
-https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles 
+<a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/how-to-set-up-access-control#step-73-sql-access-control-for-synapse-pipeline-runs">SQL access control for Synapse pipeline runs</a>
