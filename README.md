@@ -55,10 +55,12 @@ This requires a Filer Activity that filters based on the values passed from the 
  
 In this example, we are simply extracting the records from the array that are not named master. Other conditions could be applied as required, such as filtering on the sku/name of Synapse Workspace to ensure only valid Synapse SQL pools are identified.
 
-Here the command under Item is: 
-<pre><code>@activity('DBList1').output.value</code></pre>
+Here the command under Items is:
 
-where DBList1 is the name of the preceding Web activity
+<pre><code>@activity('Get List Databases').output.value
+</code></pre>
+
+where <i>GET List Databases</i> is the name of the preceding Web activity
 
 The command under Condition is: 
 <pre><code>@not(startswith(item().name,'master'))</code></pre>
