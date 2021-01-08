@@ -17,7 +17,7 @@ The process I will describe below goes through a set of steps:
 </ol>
  
 This requires a simple pipeline in Synapse:
-![](images/simple-pipeline1.png)
+![](images/simplepipeline.jpg)
 
 Depending upon the nature of your environment, the whole process described here may not apply, and you may just want to pick and choose the appropriate step. Typically the process described here would be used to Pause or Restart all instances in a Development, Test or PoC environment where the number of instances could vary over time; however, for a live environment you are more likely to schedule Pause/Restart on a instance by instance basis so will only need step 3.
 
