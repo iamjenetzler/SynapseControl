@@ -56,7 +56,6 @@ This requires a Filer Activity that filters based on the values passed from the 
 In this example, we are simply extracting the records from the array that are not named master. Other conditions could be applied as required, such as filtering on the sku/name of Synapse Workspace to ensure only valid Synapse SQL pools are identified.
 
 Here the command under Items is:
-
 <pre><code>@activity('Get List Databases').output.value
 </code></pre>
 
@@ -131,8 +130,7 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Syna
 
   https://docs.microsoft.com/en-us/azure/data-factory/control-flow-web-activity#managed-identity
 
-![](images/authentication.png) 
-
+![](images/Authentication.jpg) 
 <pre><code>
 --Create a SQL user for the workspace MSI in database
 CREATE USER [synapsecontrol] FROM EXTERNAL PROVIDER;
