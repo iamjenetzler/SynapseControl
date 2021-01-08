@@ -55,7 +55,7 @@ The output is a JSON string that contains a list of the database instances in th
 This requires a Filer Activity that filters based on the values passed from the DBList1 Activity.
 ![](images/filter-activity.png)
  
-In this example, we are simply extracting the records from the array that are not named â€œmasterâ€. Other conditions could be applied as required, such as filtering on the sku/name of DataWarehouse to ensure only valid Synapse SQL pools are identified.
+In this example, we are simply extracting the records from the array that are not named master. Other conditions could be applied as required, such as filtering on the sku/name of Synapse Workspace to ensure only valid Synapse SQL pools are identified.
 
 Here the command under Item is: 
 <pre><code>@activity('DBList1').output.value
