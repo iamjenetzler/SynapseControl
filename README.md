@@ -127,6 +127,7 @@ In this case we are using activity('CheckState').output.name (the name of the SQ
 
 ## Pipeline Run Output
 When the full pipeline described above is run, this is the output you will receive. Note that when I ran the pipeline for the results below, the scope (using the Pipeline Parameter named "ResourceGroup") was set to a single resource group that had one Synapse Workspace that was Paused, so it initiated a Restart.
+
 ![](images/PipelineRunOutput.jpg) 
 
 ## Important Authentication notes:
