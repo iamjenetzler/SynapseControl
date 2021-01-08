@@ -45,8 +45,7 @@ This is a simple Get request using the following call:
 
 Which in the example above I have parameterised using the @concat string function:
 
-<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools?api-version=2019-06-01-preview')
-</code></pre>
+<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools?api-version=2019-06-01-preview')</code></pre>
 
 The output is a JSON string that contains a list of the database instances in the SQL server named above. This is passed to the next activity.
 
@@ -57,14 +56,12 @@ This requires a Filer Activity that filters based on the values passed from the 
 In this example, we are simply extracting the records from the array that are not named master. Other conditions could be applied as required, such as filtering on the sku/name of Synapse Workspace to ensure only valid Synapse SQL pools are identified.
 
 Here the command under Item is: 
-<pre>
-<code>@activity('DBList1').output.value</code></pre>
+<pre><code>@activity('DBList1').output.value</code></pre>
 
 where DBList1 is the name of the preceding Web activity
 
 The command under Condition is: 
-<pre>
-<code>@not(startswith(item().name,'master'))</code></pre>
+<pre><code>@not(startswith(item().name,'master'))</code></pre>
 
 The remaining records in the array are then passed to the next activity.
 
@@ -82,11 +79,12 @@ This requires a Web Activity, similar to Step1. This activity calls the Check da
 ![](images/CheckSQLPoolState.jpg) 
 
 This again uses a simple Get request using the following call:
-<pre><code>GET https://management.azure.com/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/providers/Microsoft.Synapse/workspaces/{server-name}/sqlPools/{database-name}?api-version=2019-06-01-preview HTTP/1.1
-</code></pre>
+<pre><code>GET https://management.azure.com/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/providers/Microsoft.Synapse/workspaces/{server-name}/sqlPools/{database-name}?api-version=2019-06-01-preview HTTP/1.1</code></pre>
+
 Which in the example above I have parameterised using the @concat string function:
-<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')
-</code></pre>
+
+<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')</code></pre>
+
 In this case we are using item().name â€“ the name of the SQL pool from Step 1 â€“ that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName using the example in Step 0)
 
 The output is a JSON string that contains details of the SQL pool, including its status (in properties.status). This is passed to the next activity.
@@ -96,8 +94,9 @@ Create an If Condition activity and use this to evaluate the status from the pre
 ![](images/CheckCondition.jpg) 
 
 An If Condition activity requires a Boolean output, so in this example we are using the startswith function that returns true or false:
-<pre><code>@startswith(activity('CheckState').output.properties.status,'Paused') 
-</code></pre>
+
+<pre><code>@startswith(activity('CheckState').output.properties.status,'Paused')</code></pre>
+
 where CheckState is the name of the preceding Web activity.
 
 This is simply doing a check of the status â€“ if it is paused it invokes the true activity (Restart) within the If Condition, if not it invokes the false activity (Pause).
@@ -112,11 +111,13 @@ The final step (and this may be the only relevant step for some requirements), i
 ![](images/TrueConditionResume.jpg) 
 
 The example here is to resume a SQL pool, invoking a POST request using the following call:
-<pre><code>POST https://management.azure.com/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/providers/Microsoft.Synapse/workspaces/{server-name}/sqlPools/{database-name}/resume?api-version=2019-06-01-preview HTTP/1.1
-</code></pre> 
+
+<pre><code>POST https://management.azure.com/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/providers/Microsoft.Synapse/workspaces/{server-name}/sqlPools/{database-name}/resume?api-version=2019-06-01-preview HTTP/1.1</code></pre> 
+
 Which in the example above I have parameterised using the @concat string function:
-<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2019-06-01-preview')
-</code></pre> 
+
+<pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2019-06-01-preview')</code></pre> 
+
 In this case we are using activity('CheckState').output.name (the name of the SQL pool from Step 3a) that that was passed to this activity through the IF Condition loop. If you are using this a single activity against a single database, you could embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName using the example in Step 0).
 
 ## Data Factory Output
@@ -130,7 +131,8 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Syna
 
 ![](images/authentication.png) 
 
-<pre><code>--Create a SQL user for the workspace MSI in database
+<pre><code>
+--Create a SQL user for the workspace MSI in database
 CREATE USER [synapsecontrol] FROM EXTERNAL PROVIDER;
 
 --Granting permission to the identity
@@ -144,6 +146,4 @@ https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identit
 
 https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
 
-https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
-
-#Synapse
+https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles 
