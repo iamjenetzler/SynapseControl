@@ -1,7 +1,7 @@
 
 ## Introduction
 
-The process below describes one way to automate the pausing and restarting of Synapse SQL pools (previously known as SQL DW instances), using a Synapse pipeline. While there are many ways of doing this, most examples seem to be overly complicated for what should be a simple process. Also, it makes sense to include this as part of any existing data orchestration process, which typically means it need to be implemented in Data Factory. Thus, this example will show how easy it is to implement this in Data Factory and take you through the steps required.
+The process below describes one way to automate the pausing and restarting of Synapse SQL pools (previously known as SQL DW instances), using a Synapse pipeline. While there are many ways of doing this, most examples seem to be overly complicated for what should be a simple process. Also, it makes sense to include this as part of any existing data orchestration process, which typically means it need to be implemented in Synapse Pipelines. Thus, this example will show how easy it is to implement this in Synapse Pipelines and take you through the steps required.
 
 The process I will describe below goes through a set of steps:
 <ol start="1">
@@ -25,10 +25,10 @@ All of the steps above utilise the REST APIs for Synapse and Azure SQL:
  
  https://docs.microsoft.com/en-us/rest/api/sql/
 
-so you are not restricted to using Data Factory; you can execute these commands via the tools or application of your choice.
+so you are not restricted to using Synapse Pipelines, and you can execute these commands via the tools or application of your choice.
 
 ## Step 0: Parameter setup in your pipeline
-The examples below are parameter driven, which will allow you to create a generic pipeline that you can use across multiple subscriptions, resource groups, SQL servers and/or Database instances (SQL pools). These are setup in your Azure pipeline under parameters:
+The examples below are parameter driven, which will allow you to create a generic pipeline that you can use across multiple subscriptions, resource groups, SQL servers and/or Database instances (SQL pools). These are setup in your Synapse Pipeline under parameters:
 
 ![](images/parameter-setup.png)
 
@@ -68,11 +68,11 @@ The command under Condition is:
 
 The remaining records in the array are then passed to the next activity.
 
-## Step 3: Loop over each record/database
-Create a ForEach activity to loop over each database where the full pipeline with the above activities are being run. 
+## Step 3: Loop over each record/SQL Pool
+Create a ForEach activity to loop over each SQL Pool where the full pipeline with the above activities are being run. 
 ![](images/loop-over1.png) 
 
-Alternatively, if you are simply running this for a single database, complete Step 0 and follow the next steps.
+Alternatively, if you are simply running this for a single SQL Pool, complete Step 0 and follow the next steps.
 
 ### Step 3a: Check the state of the database
 This requires a Web Activity, similar to Step1. This activity calls the Check database state REST API for Azure Synapse:
@@ -87,7 +87,7 @@ This again uses a simple Get request using the following call:
 Which in the example above I have parameterised using the @concat string function:
 <pre><code>@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')
 </code></pre>
-In this case we are using item().name â€“ the name of the database from Step 1 â€“ that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName using the example in Step 0)
+In this case we are using item().name â€“ the name of the SQL pool from Step 1 â€“ that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName using the example in Step 0)
 
 The output is a JSON string that contains details of the SQL pool, including its status (in properties.status). This is passed to the next activity.
 
