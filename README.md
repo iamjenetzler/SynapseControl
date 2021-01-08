@@ -141,8 +141,11 @@ GRANT CONTROL ON DATABASE::sqlpool1 TO synapsecontrol;
 
 Further details on Managed Identity for Synapse, and how Synapse's Managed Identity is added to your SQL Server can be found here:
 
---Update These links--
-https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identity
+Grant permissions to workspace managed identity
+
+<a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-identity">Azure Synapse workspace managed identity</a>
+
+<a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/how-to-grant-workspace-managed-identity-permissions">Grant permissions to workspace managed identity</a>
 
 https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
 
