@@ -8,18 +8,17 @@ The process I will describe below goes through a set of steps:
 <li>Identify the list of databases (SQL pools) in your Synapse workspace</li>
 <li>Remove any irrelevant databases from this list (e.g. master)</li>
 <li>Loop over each sql pool and:
-<pre>i.   Check the state of the sql pool
+i.   Check the state of the sql pool
 ii.  Depending upon its status, Initiate the Pause or Restart
-</pre>
 </li>
 </ol>
 
 This requires a simple pipeline in Synapse:
 ![](images/simple-pipeline1.png)
 
-Depending upon the nature of your environment, the whole process described here may not apply and you may just want to pick and choose the appropriate step. Typically the process described here would be used to Pause or Restart all instances in a Development, Test or PoC environment â€“ where the number of instances could vary over time â€“ whereas for a live environment you are more likely to schedule Pause/Restart on a instance by instance basis so will only need step 3.
+Depending upon the nature of your environment, the whole process described here may not apply, and you may just want to pick and choose the appropriate step. Typically the process described here would be used to Pause or Restart all instances in a Development, Test or PoC environment where the number of instances could vary over time; however, for a live environment you are more likely to schedule Pause/Restart on a instance by instance basis so will only need step 3.
 
-All of the steps above utilise the REST APIs for Synapse and Azure SQL:
+All of the steps above utilize the REST APIs for Synapse and Azure SQL:
 
  https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-compute-rest-api
  
@@ -54,7 +53,7 @@ The output is a JSON string that contains a list of the database instances in th
 This requires a Filer Activity that filters based on the values passed from the DBList1 Activity.
 ![](images/filter-activity.png)
  
-In this example, we are simply extracting the records from the array that are not named â€œmasterâ€. Other conditions could be applied as required, such as filtering on the sku/name of â€œDataWarehouseâ€ to ensure only valid Synapse SQL pools are identified.
+In this example, we are simply extracting the records from the array that are not named â€œmasterâ€. Other conditions could be applied as required, such as filtering on the sku/name of DataWarehouse to ensure only valid Synapse SQL pools are identified.
 
 Here the command under Item is: 
 <pre><code>@activity('DBList1').output.value
