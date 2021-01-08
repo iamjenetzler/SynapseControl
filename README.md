@@ -36,6 +36,7 @@ The examples below are parameter driven, which will allow you to create a generi
 
 ## Step 1: Identify the list of databases (SQL pools) in your SQL server instance
 This requires a Web Activity that calls the Databases - List By Server REST API request:
+
 ![](images/WebActivityListSQLPools.jpg)
  
 This is a simple Get request using the following call:
@@ -51,6 +52,7 @@ The output is a JSON string that contains a list of the database instances in th
 
 ## Step 2: Filter the list to remove any irrelevant databases
 This requires a Filer Activity that filters based on the values passed from the DBList1 Activity.
+
 ![](images/FilterSQLPools.jpg)
  
 In this example, we are simply extracting the records from the array that are not named master. Other conditions could be applied as required, such as filtering on the sku/name of Synapse Workspace to ensure only valid Synapse SQL pools are identified.
@@ -91,7 +93,9 @@ In this case we are using item().name â€“ the name of the SQL pool from Ste
 The output is a JSON string that contains details of the SQL pool, including its status (in properties.status). This is passed to the next activity.
 
 ### Step 3b: Evaluate the status and then initiate the Pause or Restart
-Create an If Condition activity and use this to evaluate the status from the previous step.  
+Create an If Condition activity and use this to evaluate the status from the previous step.
+
+
 ![](images/CheckCondition.jpg) 
 
 An If Condition activity requires a Boolean output, so in this example we are using the startswith function that returns true or false:
@@ -102,7 +106,7 @@ where CheckState is the name of the preceding Web activity.
 
 This is simply doing a check of the status â€“ if it is paused it invokes the true activity (Restart) within the If Condition, if not it invokes the false activity (Pause).
 
-Within the appropriate activity branch add the final step.
+Within the appropriate activity branch, add the final step.
 
 ### Step 3c: Synapse Pause or Restart
 The final step (and this may be the only relevant step for some requirements), is to initiate the Pause or Restart of your Synapse SQL pool. This, like steps 1 and 3a, is a simple Web activity, calling the Pause or Resume compute REST API for Azure Synapse 
