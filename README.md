@@ -109,9 +109,9 @@ This is simply doing a check of the status – if it is paused it invokes the tr
 Within the appropriate activity branch, add the final step.
 
 ### Step 3c: Synapse Pause or Restart
-The final step (and this may be the only relevant step for some requirements), is to initiate the Pause or Restart of your Synapse SQL pool. This, like steps 1 and 3a, is a simple Web activity, calling the Pause or Resume compute REST API for Azure Synapse 
+The final step (and this may be the only relevant step for some requirements), is to initiate the Pause or Restart of your Synapse SQL pool. This, like steps 1 and 3a, is a simple Web activity, calling the Pause or Resume compute REST API for Azure Synapse:
 
-  https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-compute-rest-api#pause-compute:
+  https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-compute-rest-api#pause-compute
 
 ![](images/TrueConditionResume.jpg) 
 
@@ -136,7 +136,7 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Syna
 
 ![](images/Authentication.jpg) 
 
-Further details on Managed Identity for Synapse, and how Synapse's Managed Identity is added to your SQL Server can be found here:
+Further details on Managed Identity for Synapse, and how Synapse's Managed Identity is added to your SQL Pool can be found here:
 
 <a href="https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-identity">Azure Synapse workspace managed identity</a>
 
