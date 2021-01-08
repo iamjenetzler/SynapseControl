@@ -32,9 +32,7 @@ so you are not restricted to using Synapse Pipelines, and you can execute these 
 ## Step 0: Parameter setup in your pipeline
 The examples below are parameter driven, which will allow you to create a generic pipeline that you can use across multiple subscriptions, resource groups, SQL servers and/or Database instances (SQL pools). These are setup in your Synapse Pipeline under parameters:
 
-![](images/parameter-setup.png)
-
-
+![](images/pipelineparameters.png)
 
 ## Step 1: Identify the list of databases (SQL pools) in your SQL server instance
 This requires a Web Activity that calls the Databases - List By Server REST API request:
