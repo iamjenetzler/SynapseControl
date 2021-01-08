@@ -105,7 +105,7 @@ This is simply doing a check of the status â€“ if it is paused it invokes t
 
 Within the appropriate activity branch add the final step.
 
-### Step 3c: â€“ Synapse Pause or Restart
+### Step 3c: Synapse Pause or Restart
 The final step (and this may be the only relevant step for some requirements), is to initiate the Pause or Restart of your Synapse SQL pool. This, like steps 1 and 3a, is a simple Web activity, calling the Pause or Resume compute REST API for Azure Synapse 
 
   https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-compute-rest-api#pause-compute:
@@ -135,10 +135,12 @@ For all of the Web Activities / REST API Web calls, you need to ensure that Data
 CREATE USER [synapsecontrol] FROM EXTERNAL PROVIDER;
 
 --Granting permission to the identity
-GRANT CONTROL ON DATABASE::sqlpool1 TO synapsecontrol;</code></pre>
+GRANT CONTROL ON DATABASE::sqlpool1 TO synapsecontrol;
+</code></pre>
 
-Further details on Managed Identity for Data Factory, and how the Data Factoryâ€™s Managed Identity is added to your SQL Server can be found here:
+Further details on Managed Identity for Synapse, and how Synapse's Managed Identity is added to your SQL Server can be found here:
 
+--Update These links--
 https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identity
 
 https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
