@@ -125,7 +125,7 @@ When the full pipeline described above is run, this is the output you will recei
 ![](images/output.png) 
 
 ## Important Authentication notes:
-For all of the Web Activities / REST API Web calls, you need to ensure that Data Factory is Authenticated against the SQL server. Managed Identity is required to run these REST API calls: 
+For all of the Web Activities / REST API Web calls, you need to ensure that Synapse Pipeline is Authenticated against the SQL server. Managed Identity is required to run these REST API calls: 
 
   https://docs.microsoft.com/en-us/azure/data-factory/control-flow-web-activity#managed-identity
 
@@ -146,5 +146,3 @@ https://docs.microsoft.com/en-us/azure/data-factory/data-factory-service-identit
 https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal
 
 https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
-
-# synapse
