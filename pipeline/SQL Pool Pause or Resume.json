@@ -108,7 +108,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"url": {
-														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Pause Request - Check State').output.name,'/pause?api-version=2019-06-01-preview')",
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Check State').output.name,'/pause?api-version=2019-06-01-preview')",
 														"type": "Expression"
 													},
 													"connectVia": {
@@ -143,7 +143,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"url": {
-														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Resume Request - Check State').output.name,'/resume?api-version=2019-06-01-preview')",
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Check State').output.name,'/resume?api-version=2019-06-01-preview')",
 														"type": "Expression"
 													},
 													"connectVia": {
