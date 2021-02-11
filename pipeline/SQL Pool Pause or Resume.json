@@ -84,10 +84,10 @@
 								},
 								"cases": [
 									{
-										"value": "Pause Request",
+										"value": "Pause",
 										"activities": [
 											{
-												"name": "Pause Request - Check State",
+												"name": "Pause Request - Check State_copy1",
 												"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
 												"type": "WebActivity",
 												"dependsOn": [],
@@ -116,12 +116,12 @@
 												}
 											},
 											{
-												"name": "If State is Paused",
+												"name": "If State is Paused_copy1",
 												"description": "evaluate the status from the previous step",
 												"type": "IfCondition",
 												"dependsOn": [
 													{
-														"activity": "Pause Request - Check State",
+														"activity": "Pause Request - Check State_copy1",
 														"dependencyConditions": [
 															"Succeeded"
 														]
@@ -135,7 +135,7 @@
 													},
 													"ifFalseActivities": [
 														{
-															"name": "SQLPool_Pause",
+															"name": "SQLPool_Pause_copy1",
 															"description": "pause SQL pool, invoking a POST request",
 															"type": "WebActivity",
 															"dependsOn": [],
@@ -170,10 +170,10 @@
 										]
 									},
 									{
-										"value": "Resume Request",
+										"value": "Resume",
 										"activities": [
 											{
-												"name": "Resume Request - Check State",
+												"name": "Resume Request - Check State_copy1",
 												"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
 												"type": "WebActivity",
 												"dependsOn": [],
@@ -202,12 +202,12 @@
 												}
 											},
 											{
-												"name": "If State is Online",
+												"name": "If State is Online_copy1",
 												"description": "evaluate the status from the previous step",
 												"type": "IfCondition",
 												"dependsOn": [
 													{
-														"activity": "Resume Request - Check State",
+														"activity": "Resume Request - Check State_copy1",
 														"dependencyConditions": [
 															"Succeeded"
 														]
@@ -221,7 +221,7 @@
 													},
 													"ifFalseActivities": [
 														{
-															"name": "SQLPool_Resume",
+															"name": "SQLPool_Resume_copy1",
 															"description": "pause SQL pool, invoking a POST request",
 															"type": "WebActivity",
 															"dependsOn": [],
