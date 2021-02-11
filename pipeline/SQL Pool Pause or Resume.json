@@ -198,14 +198,16 @@
 		],
 		"parameters": {
 			"ResourceGroup": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Synapse580"
 			},
 			"Subscription": {
 				"type": "string",
 				"defaultValue": "b9913441-8a8e-4fb1-812a-9fcbe1dd9aba"
 			},
 			"WorkspaceName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Synapse580"
 			},
 			"SQLPoolName": {
 				"type": "string",
