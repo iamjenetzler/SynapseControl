@@ -73,114 +73,187 @@
 					},
 					"activities": [
 						{
-							"name": "Check State",
-							"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
-							"type": "WebActivity",
+							"name": "PauseOrResume value",
+							"type": "Switch",
 							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
 							"userProperties": [],
 							"typeProperties": {
-								"url": {
-									"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')",
+								"on": {
+									"value": "@pipeline().parameters.PauseOrResume",
 									"type": "Expression"
 								},
-								"connectVia": {
-									"referenceName": "AutoResolveIntegrationRuntime",
-									"type": "IntegrationRuntimeReference"
-								},
-								"method": "GET",
-								"authentication": {
-									"type": "MSI",
-									"resource": "https://management.azure.com"
-								}
-							}
-						},
-						{
-							"name": "If Condition1",
-							"description": "evaluate the status from the previous step",
-							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "Check State",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@startswith(activity('Check State').output.properties.status,'Paused') ",
-									"type": "Expression"
-								},
-								"ifFalseActivities": [
+								"cases": [
 									{
-										"name": "SQLPool_Pause",
-										"description": "pause SQL pool, invoking a POST request",
-										"type": "WebActivity",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"url": {
-												"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Check State').output.name,'/pause?api-version=2019-06-01-preview')",
-												"type": "Expression"
+										"value": "Pause Request",
+										"activities": [
+											{
+												"name": "Pause Request - Check State",
+												"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": {
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')",
+														"type": "Expression"
+													},
+													"connectVia": {
+														"referenceName": "AutoResolveIntegrationRuntime",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "GET",
+													"authentication": {
+														"type": "MSI",
+														"resource": "https://management.azure.com"
+													}
+												}
 											},
-											"connectVia": {
-												"referenceName": "AutoResolveIntegrationRuntime",
-												"type": "IntegrationRuntimeReference"
-											},
-											"method": "POST",
-											"body": " ",
-											"authentication": {
-												"type": "MSI",
-												"resource": "https://management.azure.com"
+											{
+												"name": "If State is Paused",
+												"description": "evaluate the status from the previous step",
+												"type": "IfCondition",
+												"dependsOn": [
+													{
+														"activity": "Pause Request - Check State",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"expression": {
+														"value": "@startswith(activity('Pause Request - Check State').output.properties.status,'Paused') ",
+														"type": "Expression"
+													},
+													"ifFalseActivities": [
+														{
+															"name": "SQLPool_Pause",
+															"description": "pause SQL pool, invoking a POST request",
+															"type": "WebActivity",
+															"dependsOn": [],
+															"policy": {
+																"timeout": "7.00:00:00",
+																"retry": 0,
+																"retryIntervalInSeconds": 30,
+																"secureOutput": false,
+																"secureInput": false
+															},
+															"userProperties": [],
+															"typeProperties": {
+																"url": {
+																	"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Pause Request - Check State').output.name,'/pause?api-version=2019-06-01-preview')",
+																	"type": "Expression"
+																},
+																"connectVia": {
+																	"referenceName": "AutoResolveIntegrationRuntime",
+																	"type": "IntegrationRuntimeReference"
+																},
+																"method": "POST",
+																"body": " ",
+																"authentication": {
+																	"type": "MSI",
+																	"resource": "https://management.azure.com"
+																}
+															}
+														}
+													]
+												}
 											}
-										}
-									}
-								],
-								"ifTrueActivities": [
+										]
+									},
 									{
-										"name": "SQLPool_Resume",
-										"description": "resume SQL pool, invoking a POST request",
-										"type": "WebActivity",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"url": {
-												"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Check State').output.name,'/resume?api-version=2019-06-01-preview')",
-												"type": "Expression"
+										"value": "Resume",
+										"activities": [
+											{
+												"name": "Resume Request - Check State",
+												"description": "In this case we are using item().name – the name of the database from Step 1 – that that was passed to this activity from the ForEach loop. If you are using in a pipeline to control a single database, you can embed the name of your Synapse SQL pool here, or use a parameter from the pipeline (e.g. pipeline().parameters.DatabaseName)",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": {
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',item().name,'?api-version=2019-06-01-preview')",
+														"type": "Expression"
+													},
+													"connectVia": {
+														"referenceName": "AutoResolveIntegrationRuntime",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "GET",
+													"authentication": {
+														"type": "MSI",
+														"resource": "https://management.azure.com"
+													}
+												}
 											},
-											"connectVia": {
-												"referenceName": "AutoResolveIntegrationRuntime",
-												"type": "IntegrationRuntimeReference"
-											},
-											"method": "POST",
-											"body": " ",
-											"authentication": {
-												"type": "MSI",
-												"resource": "https://management.azure.com"
+											{
+												"name": "If State is Online",
+												"description": "evaluate the status from the previous step",
+												"type": "IfCondition",
+												"dependsOn": [
+													{
+														"activity": "Resume Request - Check State",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"expression": {
+														"value": "@startswith(activity('Resume Request - Check State').output.properties.status,'Online') ",
+														"type": "Expression"
+													},
+													"ifFalseActivities": [
+														{
+															"name": "SQLPool_Resume",
+															"description": "pause SQL pool, invoking a POST request",
+															"type": "WebActivity",
+															"dependsOn": [],
+															"policy": {
+																"timeout": "7.00:00:00",
+																"retry": 0,
+																"retryIntervalInSeconds": 30,
+																"secureOutput": false,
+																"secureInput": false
+															},
+															"userProperties": [],
+															"typeProperties": {
+																"url": {
+																	"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.Subscription,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('Resume Request - Check State').output.name,'/resume?api-version=2019-06-01-preview')",
+																	"type": "Expression"
+																},
+																"connectVia": {
+																	"referenceName": "AutoResolveIntegrationRuntime",
+																	"type": "IntegrationRuntimeReference"
+																},
+																"method": "POST",
+																"body": " ",
+																"authentication": {
+																	"type": "MSI",
+																	"resource": "https://management.azure.com"
+																}
+															}
+														}
+													]
+												}
 											}
-										}
+										]
 									}
 								]
 							}
@@ -203,6 +276,10 @@
 			"SQLPoolName": {
 				"type": "string",
 				"defaultValue": "sqlpool1"
+			},
+			"PauseOrResume": {
+				"type": "string",
+				"defaultValue": "Pause"
 			}
 		},
 		"annotations": [],
