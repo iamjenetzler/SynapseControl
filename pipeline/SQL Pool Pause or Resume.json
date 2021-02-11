@@ -73,7 +73,7 @@
 					},
 					"activities": [
 						{
-							"name": "PauseOrResume value",
+							"name": "State-PauseOrResume",
 							"type": "Switch",
 							"dependsOn": [
 								{
