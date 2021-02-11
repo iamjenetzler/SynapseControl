@@ -170,7 +170,7 @@
 										]
 									},
 									{
-										"value": "Resume",
+										"value": "Resume Request",
 										"activities": [
 											{
 												"name": "Resume Request - Check State",
