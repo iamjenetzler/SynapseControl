@@ -1,0 +1,31 @@
+{
+	"name": "SpeakerArchiveMapping",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "SpeakerArchiveMapping.json",
+				"folderPath": "config",
+				"fileSystem": "espnnvfs"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"SpeakerName": {
+					"type": "string"
+				},
+				"ArchiveURL": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,216 @@
+{
+	"name": "neuralvoicepipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "LookupJobRequest",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "JobRequest",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set speakerName",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LookupJobRequest",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "speakerName",
+					"value": {
+						"value": "@replace(activity('LookupJobRequest').output.value[0].SpeakerName,' ','')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set limit",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LookupJobRequest",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "limit",
+					"value": {
+						"value": "@activity('LookupJobRequest').output.value[0].Limit",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set whisperModel",
+				"description": "\"tiny\", \"base\", \"small\", \"medium\", \"large\"",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LookupJobRequest",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "whisperModel",
+					"value": {
+						"value": "@activity('LookupJobRequest').output.value[0].WhisperModel",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "For Each NotebookToRun",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set speakerName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set limit",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set whisperModel",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.NotebooksToRun",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Run Notebook",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": {
+									"value": "@concat('/Repos/jen.beiser@microsoft.com/espnnv/',item())",
+									"type": "Expression"
+								},
+								"baseParameters": {
+									"speakerName": {
+										"value": "@variables('speakerName')",
+										"type": "Expression"
+									},
+									"limit": {
+										"value": "@variables('limit')",
+										"type": "Expression"
+									},
+									"whisperModel": {
+										"value": "@variables('whisperModel')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureDatabricks",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"NotebooksToRun": {
+				"type": "array",
+				"defaultValue": [
+					"01 - Download",
+					"02 - Transcode",
+					"03 - Transcribe",
+					"04 - Segmenter"
+				]
+			}
+		},
+		"variables": {
+			"speakerName": {
+				"type": "String",
+				"defaultValue": "BrianWindhorst"
+			},
+			"limit": {
+				"type": "String",
+				"defaultValue": "1"
+			},
+			"whisperModel": {
+				"type": "String",
+				"defaultValue": "large"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-06-16T21:52:11Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

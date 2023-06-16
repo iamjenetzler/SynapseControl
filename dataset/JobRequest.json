@@ -1,0 +1,34 @@
+{
+	"name": "JobRequest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "JobRequest.json",
+				"folderPath": "config",
+				"fileSystem": "espnnvfs"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"SpeakerName": {
+					"type": "string"
+				},
+				"EnableCleanup": {
+					"type": "boolean"
+				},
+				"Limit": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

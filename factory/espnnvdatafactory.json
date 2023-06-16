@@ -1,0 +1,9 @@
+{
+	"name": "espnnvdatafactory",
+	"location": "westus3",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8b4edf86-8cad-4f1a-9318-010394c3483d",
+		"tenantId": "16b3c013-d300-468d-ac64-7eda0820b6d3"
+	}
+}

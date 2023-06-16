@@ -1,0 +1,14 @@
+{
+	"name": "AzureDatabricks",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-2815193920681024.4.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/be0a65e6-cc7d-43bb-8cd1-ea2e10e35913/resourceGroups/ESPN_HoK/providers/Microsoft.Databricks/workspaces/espnnvdatabricks",
+			"existingClusterId": "0615-225011-nruy08d1"
+		}
+	}
+}
